@@ -3,11 +3,9 @@
  */
 import de.uni_kassel.features.annotation.util.Property; // requires Fujaba5/libs/features.jar in classpath
 import de.uni_kassel.features.ReferenceHandler; // requires Fujaba5/libs/features.jar in classpath
-import java.util.*;
-import de.upb.tools.fca.*; // requires Fujaba5/libs/RuntimeTools.jar in classpath
 
 
-public class Turn
+public abstract class Turn
 {
 
 
@@ -16,49 +14,124 @@ public class Turn
    {
    }
 
+   public static final String PROPERTY_CARD = "card";
+
+   @Property( name = PROPERTY_CARD, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
+   private Card card;
+
+   @Property( name = PROPERTY_CARD )
+   public void setCard (Card value)
+   {
+      this.card = value;
+   }
+
+   public Turn withCard (Card value)
+   {
+      setCard (value);
+      return this;
+   }
+
+   @Property( name = PROPERTY_CARD )
+   public Card getCard ()
+   {
+      return this.card;
+   }
+
    public static Turn getInstance ()
+   {
+   }
+
+   public void playCard ()
    {
    }
 
    /**
     * <pre>
-    *           0..1     has     0..n
+    *           1     happens     1
+    * Turn ------------------------- playCard
+    *           turn               playCard
+    * </pre>
+    */
+   public static final String PROPERTY_PLAY_CARD = "playCard";
+
+   @Property( name = PROPERTY_PLAY_CARD, partner = playCard.PROPERTY_TURN, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private playCard playCard;
+
+   @Property( name = PROPERTY_PLAY_CARD )
+   public boolean setPlayCard (playCard value)
+   {
+      boolean changed = false;
+
+      if (this.playCard != value)
+      {
+      
+         playCard oldValue = this.playCard;
+         Turn source = this;
+         if (this.playCard != null)
+         {
+            this.playCard = null;
+            oldValue.setTurn (null);
+         }
+         this.playCard = value;
+
+         if (value != null)
+         {
+            value.setTurn (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_PLAY_CARD )
+   public Turn withPlayCard (playCard value)
+   {
+      setPlayCard (value);
+      return this;
+   }
+
+   public playCard getPlayCard ()
+   {
+      return this.playCard;
+   }
+
+   /**
+    * <pre>
+    *           1     has     1
     * Turn ------------------------- Player
     *           turn               player
     * </pre>
     */
    public static final String PROPERTY_PLAYER = "player";
 
-   @Property( name = PROPERTY_PLAYER, partner = Player.PROPERTY_TURN, kind = ReferenceHandler.ReferenceKind.TO_MANY,
+   @Property( name = PROPERTY_PLAYER, partner = Player.PROPERTY_TURN, kind = ReferenceHandler.ReferenceKind.TO_ONE,
          adornment = ReferenceHandler.Adornment.NONE)
-   private FHashSet<Player> player;
+   private Player player;
 
    @Property( name = PROPERTY_PLAYER )
-   public Set<? extends Player> getPlayer()
-   {
-      return ((this.player == null)
-              ? Collections.EMPTY_SET
-              : Collections.unmodifiableSet(this.player));
-   }
-
-   @Property( name = PROPERTY_PLAYER )
-   public boolean addToPlayer (Player value)
+   public boolean setPlayer (Player value)
    {
       boolean changed = false;
 
-      if (value != null)
+      if (this.player != value)
       {
-         if (this.player == null)
-         {
-            this.player = new FHashSet<Player> ();
-
-         }
       
-         changed = this.player.add (value);
-         if (changed)
+         Player oldValue = this.player;
+         Turn source = this;
+         if (this.player != null)
+         {
+            this.player = null;
+            oldValue.setTurn (null);
+         }
+         this.player = value;
+
+         if (value != null)
          {
             value.setTurn (this);
          }
+         changed = true;
       
       }
       return changed;
@@ -67,69 +140,59 @@ public class Turn
    @Property( name = PROPERTY_PLAYER )
    public Turn withPlayer (Player value)
    {
-      addToPlayer (value);
+      setPlayer (value);
       return this;
    }
 
-   public Turn withoutPlayer (Player value)
+   public Player getPlayer ()
    {
-      removeFromPlayer (value);
+      return this.player;
+   }
+
+   public static final String PROPERTY_STRATEGY = "strategy";
+
+   @Property( name = PROPERTY_STRATEGY, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
+   private playCard strategy;
+
+   @Property( name = PROPERTY_STRATEGY )
+   public void setStrategy (playCard value)
+   {
+      this.strategy = value;
+   }
+
+   public Turn withStrategy (playCard value)
+   {
+      setStrategy (value);
       return this;
    }
 
-
-   public boolean removeFromPlayer (Player value)
+   @Property( name = PROPERTY_STRATEGY )
+   public playCard getStrategy ()
    {
-      boolean changed = false;
-
-      if ((this.player != null) && (value != null))
-      {
-      
-         changed = this.player.remove (value);
-         if (changed)
-         {
-            value.setTurn (null);
-         }
-      
-      }
-      return changed;
+      return this.strategy;
    }
 
-   @Property( name = PROPERTY_PLAYER )
-   public void removeAllFromPlayer (){
-   
-      Player tmpValue;
-      Iterator<? extends Player> iter = this.iteratorOfPlayer ();
-      while (iter.hasNext ())
-      {
-         tmpValue = (Player) iter.next ();
-         this.removeFromPlayer (tmpValue);
-      }
-   
+   public static final String PROPERTY_SUIT = "suit";
+
+   @Property( name = PROPERTY_SUIT, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
+   private String suit;
+
+   @Property( name = PROPERTY_SUIT )
+   public void setSuit (String value)
+   {
+      this.suit = value;
    }
 
-   @Property( name = PROPERTY_PLAYER )
-   public boolean hasInPlayer (Player value)
+   public Turn withSuit (String value)
    {
-      return ((this.player != null) &&
-              (value != null) &&
-              this.player.contains (value));
+      setSuit (value);
+      return this;
    }
 
-   @Property( name = PROPERTY_PLAYER )
-   public Iterator<? extends Player> iteratorOfPlayer ()
+   @Property( name = PROPERTY_SUIT )
+   public String getSuit ()
    {
-      return ((this.player == null)
-              ? FEmptyIterator.<Player>get ()
-              : this.player.iterator ());
-   }
-
-   @Property( name = PROPERTY_PLAYER )
-   public int sizeOfPlayer ()
-   {
-      return ((this.player == null)
-              ? 0
-              : this.player.size ());
+      return this.suit;
    }
 
    public static final String PROPERTY_TURN = "turn";
@@ -138,9 +201,33 @@ public class Turn
    private static Turn turn = new Turn();
 
 
+   public static final String PROPERTY_VALUE = "value";
+
+   @Property( name = PROPERTY_VALUE, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
+   private String value;
+
+   @Property( name = PROPERTY_VALUE )
+   public void setValue (String value)
+   {
+      this.value = value;
+   }
+
+   public Turn withValue (String value)
+   {
+      setValue (value);
+      return this;
+   }
+
+   @Property( name = PROPERTY_VALUE )
+   public String getValue ()
+   {
+      return this.value;
+   }
+
    public void removeYou()
    {
-      this.removeAllFromPlayer ();
+      this.setPlayCard (null);
+      this.setPlayer (null);
    }
 }
 

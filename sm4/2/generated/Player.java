@@ -126,7 +126,7 @@ public class Player
 
    /**
     * <pre>
-    *           0..n     is     0..1
+    *           1     is     0..1
     * Player ------------------------- Dealer
     *           player               dealer
     * </pre>
@@ -150,13 +150,13 @@ public class Player
          if (this.dealer != null)
          {
             this.dealer = null;
-            oldValue.removeFromPlayer (this);
+            oldValue.setPlayer (null);
          }
          this.dealer = value;
 
          if (value != null)
          {
-            value.addToPlayer (this);
+            value.setPlayer (this);
          }
          changed = true;
       
@@ -178,37 +178,37 @@ public class Player
 
    /**
     * <pre>
-    *           1     seated     1
+    *           1     before     1
     * Player ------------------------- Player
-    *           right               left
+    *           next               first
     * </pre>
     */
-   public static final String PROPERTY_LEFT = "left";
+   public static final String PROPERTY_FIRST = "first";
 
-   @Property( name = PROPERTY_LEFT, partner = Player.PROPERTY_RIGHT, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+   @Property( name = PROPERTY_FIRST, partner = Player.PROPERTY_NEXT, kind = ReferenceHandler.ReferenceKind.TO_ONE,
          adornment = ReferenceHandler.Adornment.NONE)
-   private Player left;
+   private Player first;
 
-   @Property( name = PROPERTY_LEFT )
-   public boolean setLeft (Player value)
+   @Property( name = PROPERTY_FIRST )
+   public boolean setFirst (Player value)
    {
       boolean changed = false;
 
-      if (this.left != value)
+      if (this.first != value)
       {
       
-         Player oldValue = this.left;
+         Player oldValue = this.first;
          Player source = this;
-         if (this.left != null)
+         if (this.first != null)
          {
-            this.left = null;
-            oldValue.setRight (null);
+            this.first = null;
+            oldValue.setNext (null);
          }
-         this.left = value;
+         this.first = value;
 
          if (value != null)
          {
-            value.setRight (this);
+            value.setNext (this);
          }
          changed = true;
       
@@ -216,16 +216,16 @@ public class Player
       return changed;
    }
 
-   @Property( name = PROPERTY_LEFT )
-   public Player withLeft (Player value)
+   @Property( name = PROPERTY_FIRST )
+   public Player withFirst (Player value)
    {
-      setLeft (value);
+      setFirst (value);
       return this;
    }
 
-   public Player getLeft ()
+   public Player getFirst ()
    {
-      return this.left;
+      return this.first;
    }
 
    public static final String PROPERTY_NAME = "name";
@@ -253,37 +253,37 @@ public class Player
 
    /**
     * <pre>
-    *           1     seated     1
+    *           1     before     1
     * Player ------------------------- Player
-    *           left               right
+    *           first               next
     * </pre>
     */
-   public static final String PROPERTY_RIGHT = "right";
+   public static final String PROPERTY_NEXT = "next";
 
-   @Property( name = PROPERTY_RIGHT, partner = Player.PROPERTY_LEFT, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+   @Property( name = PROPERTY_NEXT, partner = Player.PROPERTY_FIRST, kind = ReferenceHandler.ReferenceKind.TO_ONE,
          adornment = ReferenceHandler.Adornment.NONE)
-   private Player right;
+   private Player next;
 
-   @Property( name = PROPERTY_RIGHT )
-   public boolean setRight (Player value)
+   @Property( name = PROPERTY_NEXT )
+   public boolean setNext (Player value)
    {
       boolean changed = false;
 
-      if (this.right != value)
+      if (this.next != value)
       {
       
-         Player oldValue = this.right;
+         Player oldValue = this.next;
          Player source = this;
-         if (this.right != null)
+         if (this.next != null)
          {
-            this.right = null;
-            oldValue.setLeft (null);
+            this.next = null;
+            oldValue.setFirst (null);
          }
-         this.right = value;
+         this.next = value;
 
          if (value != null)
          {
-            value.setLeft (this);
+            value.setFirst (this);
          }
          changed = true;
       
@@ -291,21 +291,21 @@ public class Player
       return changed;
    }
 
-   @Property( name = PROPERTY_RIGHT )
-   public Player withRight (Player value)
+   @Property( name = PROPERTY_NEXT )
+   public Player withNext (Player value)
    {
-      setRight (value);
+      setNext (value);
       return this;
    }
 
-   public Player getRight ()
+   public Player getNext ()
    {
-      return this.right;
+      return this.next;
    }
 
    /**
     * <pre>
-    *           0..n     has     0..1
+    *           1     has     1
     * Player ------------------------- Turn
     *           player               turn
     * </pre>
@@ -329,13 +329,13 @@ public class Player
          if (this.turn != null)
          {
             this.turn = null;
-            oldValue.removeFromPlayer (this);
+            oldValue.setPlayer (null);
          }
          this.turn = value;
 
          if (value != null)
          {
-            value.addToPlayer (this);
+            value.setPlayer (this);
          }
          changed = true;
       
@@ -359,8 +359,8 @@ public class Player
    {
       this.removeAllFromCard ();
       this.setDealer (null);
-      this.setLeft (null);
-      this.setRight (null);
+      this.setFirst (null);
+      this.setNext (null);
       this.setTurn (null);
    }
 }

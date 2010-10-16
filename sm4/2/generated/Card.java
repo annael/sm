@@ -118,6 +118,58 @@ public class Card
 
    /**
     * <pre>
+    *           0..1     ontop     0..1
+    * Card ------------------------- cardsInPlay
+    *           ontop               cardsInPlay2
+    * </pre>
+    */
+   public static final String PROPERTY_CARDS_IN_PLAY2 = "cardsInPlay2";
+
+   @Property( name = PROPERTY_CARDS_IN_PLAY2, partner = cardsInPlay.PROPERTY_ONTOP, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private cardsInPlay cardsInPlay2;
+
+   @Property( name = PROPERTY_CARDS_IN_PLAY2 )
+   public boolean setCardsInPlay2 (cardsInPlay value)
+   {
+      boolean changed = false;
+
+      if (this.cardsInPlay2 != value)
+      {
+      
+         cardsInPlay oldValue = this.cardsInPlay2;
+         Card source = this;
+         if (this.cardsInPlay2 != null)
+         {
+            this.cardsInPlay2 = null;
+            oldValue.setOntop (null);
+         }
+         this.cardsInPlay2 = value;
+
+         if (value != null)
+         {
+            value.setOntop (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_CARDS_IN_PLAY2 )
+   public Card withCardsInPlay2 (cardsInPlay value)
+   {
+      setCardsInPlay2 (value);
+      return this;
+   }
+
+   public cardsInPlay getCardsInPlay2 ()
+   {
+      return this.cardsInPlay2;
+   }
+
+   /**
+    * <pre>
     *           1..n     contain     1
     * Card ------------------------- cardsInPlay
     *           card               cardsInPlay
@@ -382,6 +434,7 @@ public class Card
    {
       this.setBottom (null);
       this.setCard (null);
+      this.setCardsInPlay2 (null);
       this.setCardsInPlay (null);
       this.removeAllFromPlayer ();
       this.setTop (null);
