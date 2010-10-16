@@ -176,6 +176,58 @@ public class Player
       return this.dealer;
    }
 
+   /**
+    * <pre>
+    *           1     seated     1
+    * Player ------------------------- Player
+    *           right               left
+    * </pre>
+    */
+   public static final String PROPERTY_LEFT = "left";
+
+   @Property( name = PROPERTY_LEFT, partner = Player.PROPERTY_RIGHT, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private Player left;
+
+   @Property( name = PROPERTY_LEFT )
+   public boolean setLeft (Player value)
+   {
+      boolean changed = false;
+
+      if (this.left != value)
+      {
+      
+         Player oldValue = this.left;
+         Player source = this;
+         if (this.left != null)
+         {
+            this.left = null;
+            oldValue.setRight (null);
+         }
+         this.left = value;
+
+         if (value != null)
+         {
+            value.setRight (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_LEFT )
+   public Player withLeft (Player value)
+   {
+      setLeft (value);
+      return this;
+   }
+
+   public Player getLeft ()
+   {
+      return this.left;
+   }
+
    public static final String PROPERTY_NAME = "name";
 
    @Property( name = PROPERTY_NAME, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
@@ -197,6 +249,58 @@ public class Player
    public String getName ()
    {
       return this.name;
+   }
+
+   /**
+    * <pre>
+    *           1     seated     1
+    * Player ------------------------- Player
+    *           left               right
+    * </pre>
+    */
+   public static final String PROPERTY_RIGHT = "right";
+
+   @Property( name = PROPERTY_RIGHT, partner = Player.PROPERTY_LEFT, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private Player right;
+
+   @Property( name = PROPERTY_RIGHT )
+   public boolean setRight (Player value)
+   {
+      boolean changed = false;
+
+      if (this.right != value)
+      {
+      
+         Player oldValue = this.right;
+         Player source = this;
+         if (this.right != null)
+         {
+            this.right = null;
+            oldValue.setLeft (null);
+         }
+         this.right = value;
+
+         if (value != null)
+         {
+            value.setLeft (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_RIGHT )
+   public Player withRight (Player value)
+   {
+      setRight (value);
+      return this;
+   }
+
+   public Player getRight ()
+   {
+      return this.right;
    }
 
    /**
@@ -255,6 +359,8 @@ public class Player
    {
       this.removeAllFromCard ();
       this.setDealer (null);
+      this.setLeft (null);
+      this.setRight (null);
       this.setTurn (null);
    }
 }

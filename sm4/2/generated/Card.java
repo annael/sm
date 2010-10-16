@@ -14,6 +14,58 @@ public class Card
 
    /**
     * <pre>
+    *           1     ontop     1
+    * Card ------------------------- Card
+    *           top               bottom
+    * </pre>
+    */
+   public static final String PROPERTY_BOTTOM = "bottom";
+
+   @Property( name = PROPERTY_BOTTOM, partner = Card.PROPERTY_TOP, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private Card bottom;
+
+   @Property( name = PROPERTY_BOTTOM )
+   public boolean setBottom (Card value)
+   {
+      boolean changed = false;
+
+      if (this.bottom != value)
+      {
+      
+         Card oldValue = this.bottom;
+         Card source = this;
+         if (this.bottom != null)
+         {
+            this.bottom = null;
+            oldValue.setTop (null);
+         }
+         this.bottom = value;
+
+         if (value != null)
+         {
+            value.setTop (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_BOTTOM )
+   public Card withBottom (Card value)
+   {
+      setBottom (value);
+      return this;
+   }
+
+   public Card getBottom ()
+   {
+      return this.bottom;
+   }
+
+   /**
+    * <pre>
     *           0..n     contain     1
     * Card ------------------------- Stack
     *           stack               card
@@ -251,6 +303,58 @@ public class Card
       return this.suit;
    }
 
+   /**
+    * <pre>
+    *           1     ontop     1
+    * Card ------------------------- Card
+    *           bottom               top
+    * </pre>
+    */
+   public static final String PROPERTY_TOP = "top";
+
+   @Property( name = PROPERTY_TOP, partner = Card.PROPERTY_BOTTOM, kind = ReferenceHandler.ReferenceKind.TO_ONE,
+         adornment = ReferenceHandler.Adornment.NONE)
+   private Card top;
+
+   @Property( name = PROPERTY_TOP )
+   public boolean setTop (Card value)
+   {
+      boolean changed = false;
+
+      if (this.top != value)
+      {
+      
+         Card oldValue = this.top;
+         Card source = this;
+         if (this.top != null)
+         {
+            this.top = null;
+            oldValue.setBottom (null);
+         }
+         this.top = value;
+
+         if (value != null)
+         {
+            value.setBottom (this);
+         }
+         changed = true;
+      
+      }
+      return changed;
+   }
+
+   @Property( name = PROPERTY_TOP )
+   public Card withTop (Card value)
+   {
+      setTop (value);
+      return this;
+   }
+
+   public Card getTop ()
+   {
+      return this.top;
+   }
+
    public static final String PROPERTY_VALUE = "value";
 
    @Property( name = PROPERTY_VALUE, kind = ReferenceHandler.ReferenceKind.ATTRIBUTE )
@@ -276,9 +380,11 @@ public class Card
 
    public void removeYou()
    {
+      this.setBottom (null);
       this.setCard (null);
       this.setCardsInPlay (null);
       this.removeAllFromPlayer ();
+      this.setTop (null);
    }
 }
 
