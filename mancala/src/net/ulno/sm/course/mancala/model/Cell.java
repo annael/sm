@@ -28,6 +28,10 @@ public class Cell {
 		this.stones++;
 	}
 
+	public void addStone(int stones) {
+		this.stones += stones;
+	}
+
 	public Cell(Player owner, int stones, boolean mancala, int order) {
 		this.owner = owner;
 		this.stones = stones;

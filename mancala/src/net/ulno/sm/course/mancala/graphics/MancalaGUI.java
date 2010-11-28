@@ -37,6 +37,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	private JButton u2h5;
 	private JButton u2h6;
 	private JButton endTurn;
+	private JButton newGame;
 	private JLabel u1total;
 	private JLabel u2total;
 	private JLabel workMsg;
@@ -102,17 +103,17 @@ public class MancalaGUI extends JFrame implements ActionListener {
 
 			// second row
 
-			boardPanel.add(getU2H1(), new Constraints(new Leading(100, 50, 10,
+			boardPanel.add(getU2H6(), new Constraints(new Leading(100, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
-			boardPanel.add(getU2H2(), new Constraints(new Leading(155, 50, 10,
+			boardPanel.add(getU2H5(), new Constraints(new Leading(155, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
-			boardPanel.add(getU2H3(), new Constraints(new Leading(210, 50, 10,
+			boardPanel.add(getU2H4(), new Constraints(new Leading(210, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
-			boardPanel.add(getU2H4(), new Constraints(new Leading(265, 50, 10,
+			boardPanel.add(getU2H3(), new Constraints(new Leading(265, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
-			boardPanel.add(getU2H5(), new Constraints(new Leading(320, 50, 10,
+			boardPanel.add(getU2H2(), new Constraints(new Leading(320, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
-			boardPanel.add(getU2H6(), new Constraints(new Leading(375, 50, 10,
+			boardPanel.add(getU2H1(), new Constraints(new Leading(375, 50, 10,
 					10), new Leading(120, 50, 12, 12)));
 
 			boardPanel.add(getUser1Total(), new Constraints(new Leading(70, 10,
@@ -123,8 +124,11 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			boardPanel.add(getMessage(), new Constraints(new Leading(170, 12,
 					12), new Leading(10, 12, 12)));
 
-			boardPanel.add(getEndTurn(), new Constraints(new Leading(380, 12,
-					12), new Leading(200, 12, 12)));
+			// boardPanel.add(getEndTurn(), new Constraints(new Leading(380, 12,
+			// 12), new Leading(200, 12, 12)));
+
+			boardPanel.add(getNewGame(), new Constraints(
+					new Leading(10, 12, 12), new Leading(200, 12, 12)));
 
 			// add action listeners
 			getU1H1().addActionListener(this);
@@ -140,6 +144,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			getU2H5().addActionListener(this);
 			getU2H6().addActionListener(this);
 			getEndTurn().addActionListener(this);
+			getNewGame().addActionListener(this);
 		}
 		return boardPanel;
 	}
@@ -151,6 +156,15 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			endTurn.setName("endTurn");
 		}
 		return endTurn;
+	}
+
+	private JButton getNewGame() {
+		if (newGame == null) {
+			newGame = new JButton();
+			newGame.setText("New Game");
+			newGame.setName("newGame");
+		}
+		return newGame;
 	}
 
 	private JButton getU1H6() {
@@ -280,6 +294,9 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return titleLabel;
 	}
 
+	/**
+	 * Disables button of non-active player
+	 */
 	private void disableButtons() {
 		if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
 			disableU2Buttons();
@@ -363,54 +380,97 @@ public class MancalaGUI extends JFrame implements ActionListener {
 
 	private void changeU2StoneLabels(Player u2) {
 		getU2H1().setText(
-				String.valueOf(u2.getCellByName(getU1H1().getName())
+				String.valueOf(u2.getCellByName(getU2H1().getName())
 						.getStones()));
 		getU2H2().setText(
-				String.valueOf(u2.getCellByName(getU1H2().getName())
+				String.valueOf(u2.getCellByName(getU2H2().getName())
 						.getStones()));
 		getU2H3().setText(
-				String.valueOf(u2.getCellByName(getU1H3().getName())
+				String.valueOf(u2.getCellByName(getU2H3().getName())
 						.getStones()));
 		getU2H4().setText(
-				String.valueOf(u2.getCellByName(getU1H4().getName())
+				String.valueOf(u2.getCellByName(getU2H4().getName())
 						.getStones()));
 		getU2H5().setText(
-				String.valueOf(u2.getCellByName(getU1H5().getName())
+				String.valueOf(u2.getCellByName(getU2H5().getName())
 						.getStones()));
 		getU2H6().setText(
-				String.valueOf(u2.getCellByName(getU1H6().getName())
+				String.valueOf(u2.getCellByName(getU2H6().getName())
 						.getStones()));
 		// +mancala itself
 		getUser2Total().setText(
 				String.valueOf(u2.getCellByName("u2h0").getStones()));
 	}
 
+	private String getGameOverText(int win) {
+		switch (win) {
+		case 0:
+			return "Game ended with a draw";
+		case 1:
+			return "Player 1 won";
+		case 2:
+			return "Player 2 won";
+		}
+		return "";
+	}
+
+	/**
+	 * Method that handles all performed actions
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
 		if (source.getName().equals("endTurn")) {
 			Mancala.getTurn().changeTurn();
 			disableButtons();
+		} else if (source.getName().equals("newGame")) {
+			Mancala.getTurn().getActivePlayer().generateCells();
+			Mancala.getTurn().getNonActivePlayer().generateCells();
+			if (Mancala.getTurn().getActivePlayer().getName().equals("2")) {
+				Mancala.getTurn().changeTurn();
+				disableButtons();
+			}
+			changeStoneLabels();
 		} else {
 			Cell activePit = Mancala.getTurn().getActivePlayer().getCellByName(
 					source.getName());
-			if (activePit != null && activePit.getStones() == 0) {
-				Cell oppositePit = Mancala.getTurn().getNonActivePlayer()
-						.getCellByName(
-								"u"
-										+ Mancala.getTurn()
-												.getNonActivePlayer().getName()
-										+ "h" + activePit.getOrderNr());
-				// start capturing
-				System.out.println(oppositePit.getStones() + ","
-						+ oppositePit.getName());
-				// movesTones, changeLabels
-				// end of turn
+			boolean anotherTurn = false;
+			if (activePit.getStones() != 0) {
+				anotherTurn = Mancala.moveStones(activePit);
+				changeStoneLabels();
 			} else {
-				System.out.println("time to move");
-				Mancala.moveStones(activePit);
-				// move, changeLabels
-				// end of turn
+				anotherTurn = true;
+			}
+
+			Player player1;
+			Player player2;
+
+			if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
+				player1 = Mancala.getTurn().getActivePlayer();
+				player2 = Mancala.getTurn().getNonActivePlayer();
+			} else {
+				player1 = Mancala.getTurn().getNonActivePlayer();
+				player2 = Mancala.getTurn().getActivePlayer();
+			}
+
+			boolean gameOver = Mancala.isGameOver(player1.getCells(), player2
+					.getCells());
+
+			if (gameOver) {
+				disableU1Buttons();
+				disableU2Buttons();
+				getMessage().setText(
+						getGameOverText(Mancala.getWinner(player1.getCells(),
+								player2.getCells())));
+			}
+
+			if (!anotherTurn) {
+				Mancala.getTurn().changeTurn();
+				disableButtons();
+				getMessage().setText(
+						"It's now player "
+								+ Mancala.getTurn().getActivePlayer().getName()
+								+ " turn!");
 			}
 		}
 

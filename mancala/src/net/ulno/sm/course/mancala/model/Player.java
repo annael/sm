@@ -81,4 +81,13 @@ public class Player {
 		}
 		return null;
 	}
+
+	public Cell getCellByOrder(int order) {
+		for (Cell c : getCells()) {
+			if (c.getOrderNr() == order) {
+				return c;
+			}
+		}
+		return null;
+	}
 }
