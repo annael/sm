@@ -1,0 +1,95 @@
+﻿Mancala Test Cases
+
+1) Returning number of captured stones
+
+Precondition: game situation of player Bob is as follows:
+
+
+
+Action: Instance method Player.getStoneNumber() is called out for player Bob.
+
+test = Bob.getStoneNumber();
+
+Postcondition: Game situation does not change (exactly the same diagram as before). Number of captured stones is stored in the variable test.
+
+test = 9;
+
+2) Returning number of captured stones is case of empty mancala
+
+Precondition: game situation of player Bob is as follows:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Action: Instance method Player.getStoneNumber() is called out for player Bob.
+test = Bob.getStoneNumber();
+
+Postcondition: Game situation does not change (exactly the same diagram as before). Number of captured stones is stored in the variable test. 
+Test = 0;
+3) Controlling whether the game is over 
+
+Precondition:
+game situation is as follows:
+
+Action: method Turn.isGameOver() is called out
+check = Turn.isGameOver();
+
+Postcondition: Game situation does not change (exactly the same diagram as before). check = True; 
+
+4) Controlling whether the game is over 
+
+Precondition:
+game situation is as follows:
+
+
+
+
+
+
+
+Action: method Turn.isGameOver() is called out
+check = Turn.isGameOver();
+
+Postcondition: Game situation does not change (exactly the same diagram as before). check = False;
