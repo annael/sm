@@ -38,7 +38,50 @@ public class Mancala {
 	public static void setTurn(Turn turn) {
 		Mancala.turn = turn;
 	}
+	
+	public static void Play (Cell activePit)
+	{
+		
+		boolean anotherTurn = false;
+		if (activePit.getStones() != 0) {
+			anotherTurn = Mancala.moveStones(activePit);
+			MancalaGUI.changeStoneLabels();
+		} else {
+			anotherTurn = true;
+		}
 
+		Player player1;
+		Player player2;
+
+		if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
+			player1 = Mancala.getTurn().getActivePlayer();
+			player2 = Mancala.getTurn().getNonActivePlayer();
+		} else {
+			player1 = Mancala.getTurn().getNonActivePlayer();
+			player2 = Mancala.getTurn().getActivePlayer();
+		}
+
+		boolean gameOver = Mancala.isGameOver(player1.getCells(), player2.getCells());
+
+		if (gameOver) {
+			MancalaGUI.disableU1Buttons();
+			MancalaGUI.disableU2Buttons();
+			MancalaGUI.getMessage().setText(
+					MancalaGUI.getGameOverText(Mancala.getWinner(player1.getCells(),
+							player2.getCells())));
+
+			// write log
+		}
+
+		if (!anotherTurn) {
+			Mancala.getTurn().changeTurn();
+			MancalaGUI.disableButtons();
+			MancalaGUI.getMessage().setText(
+					"It's now player "
+							+ Mancala.getTurn().getActivePlayer().getName()
+							+ " turn!");
+		}
+	}
 	/**
 	 * Main method for interaction with the game (playing) Moves the stones
 	 * according to the rules, checks if game is over or not
@@ -71,7 +114,7 @@ public class Mancala {
 			}
 		}
 		// TODO check if capture
-		if (!last.isMancala() && last.getStones() == 1) {
+		if (!last.isMancala() && last.getStones() == 1 ) {
 			int opposite = getOppositePitNumber(last.getOrderNr());
 			System.out.println("op:" + opposite);
 			if (last.getOwner() == cell.getOwner()) {
@@ -81,14 +124,7 @@ public class Mancala {
 										+ last.getStones());
 				enemyCells.get(opposite).removeAll();
 				last.removeAll();
-			} else {
-				playerCell.get(0)
-						.addStone(
-								playerCell.get(opposite).getStones()
-										+ last.getStones());
-				playerCell.get(opposite).removeAll();
-				last.removeAll();
-			}
+			} 
 		}
 
 		cell.removeAll();
