@@ -21,6 +21,7 @@ import org.dyno.visual.swing.layouts.Leading;
 public class MancalaGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String filename = "/home/demente/logM.txt";
 	private JPanel titlePanel;
 	private JLabel titleLabel;
 	private JPanel boardPanel;
@@ -37,6 +38,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	private JButton u2h5;
 	private JButton u2h6;
 	private JButton endTurn;
+	private JButton showLog;
 	private JButton newGame;
 	private JLabel u1total;
 	private JLabel u2total;
@@ -127,6 +129,9 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			// boardPanel.add(getEndTurn(), new Constraints(new Leading(380, 12,
 			// 12), new Leading(200, 12, 12)));
 
+			boardPanel.add(getShowLog(), new Constraints(new Leading(380, 12,
+					12), new Leading(200, 12, 12)));
+
 			boardPanel.add(getNewGame(), new Constraints(
 					new Leading(10, 12, 12), new Leading(200, 12, 12)));
 
@@ -156,6 +161,15 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			endTurn.setName("endTurn");
 		}
 		return endTurn;
+	}
+
+	private JButton getShowLog() {
+		if (showLog == null) {
+			showLog = new JButton();
+			showLog.setText("Show log");
+			showLog.setName("showLog");
+		}
+		return showLog;
 	}
 
 	private JButton getNewGame() {
@@ -420,9 +434,9 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
-		if (source.getName().equals("endTurn")) {
-			Mancala.getTurn().changeTurn();
-			disableButtons();
+		if (source.getName().equals("showLog")) {
+
+			// read log
 		} else if (source.getName().equals("newGame")) {
 			Mancala.getTurn().getActivePlayer().generateCells();
 			Mancala.getTurn().getNonActivePlayer().generateCells();
@@ -462,6 +476,8 @@ public class MancalaGUI extends JFrame implements ActionListener {
 				getMessage().setText(
 						getGameOverText(Mancala.getWinner(player1.getCells(),
 								player2.getCells())));
+
+				// write log
 			}
 
 			if (!anotherTurn) {

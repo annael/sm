@@ -76,12 +76,18 @@ public class Mancala {
 			System.out.println("op:" + opposite);
 			if (last.getOwner() == cell.getOwner()) {
 				playerCell.get(0)
-						.addStone(enemyCells.get(opposite).getStones());
+						.addStone(
+								enemyCells.get(opposite).getStones()
+										+ last.getStones());
 				enemyCells.get(opposite).removeAll();
+				last.removeAll();
 			} else {
 				playerCell.get(0)
-						.addStone(playerCell.get(opposite).getStones());
+						.addStone(
+								playerCell.get(opposite).getStones()
+										+ last.getStones());
 				playerCell.get(opposite).removeAll();
+				last.removeAll();
 			}
 		}
 
@@ -103,22 +109,7 @@ public class Mancala {
 	 * @return number of the opposite pit
 	 */
 	private static int getOppositePitNumber(int order) {
-		switch (order) {
-		case 1:
-			return 6;
-		case 2:
-			return 5;
-		case 3:
-			return 4;
-		case 4:
-			return 3;
-		case 5:
-			return 2;
-		case 6:
-			return 1;
-		}
-
-		return 0;
+		return 7 - order;
 	}
 
 	/**
