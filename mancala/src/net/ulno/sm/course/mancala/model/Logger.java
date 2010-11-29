@@ -1,12 +1,20 @@
 package net.ulno.sm.course.mancala.model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 public final class Logger implements Serializable {
-
+	private static final long serialVersionUID = 3652765666114489556L;
 	private String winner;
 	private int p1;
 	private int p2;
@@ -36,33 +44,51 @@ public final class Logger implements Serializable {
 	}
 
 	public Logger(String winner, int p1, int p2) {
-		super();
 		this.winner = winner;
 		this.p1 = p1;
 		this.p2 = p2;
 	}
 
 	public Logger() {
-		this("", 0, 0);
+		winner = "";
+		p1 = 0;
+		p2 = 0;
 	}
 
-	private static final long serialVersionUID = 7526471155622776147L;
-
-	/**
-	 * Always treat de-serialization as a full-blown constructor, by validating
-	 * the final state of the de-serialized object.
-	 */
-	public static void readObject(ObjectInputStream aInputStream)
-			throws ClassNotFoundException, IOException {
-		aInputStream.defaultReadObject();
+	public Logger(String fileName) throws Exception {
+		try {
+			InputStream file = new FileInputStream(fileName);
+			InputStream buffer = new BufferedInputStream(file);
+			ObjectInput input = new ObjectInputStream(buffer);
+			try {
+				Logger l = new Logger();
+				l = (Logger) input.readObject();
+				this.winner = l.getWinner();
+				this.p1 = l.getP1();
+				this.p2 = l.getP2();
+			} finally {
+				input.close();
+			}
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			throw ex;
+		}
 	}
 
-	/**
-	 * This is the default implementation of writeObject. Customise if
-	 * necessary.
-	 */
-	public static void writeObject(ObjectOutputStream aOutputStream)
-			throws IOException {
-		aOutputStream.defaultWriteObject();
+	public void writeData(String fileName) {
+		try {
+			OutputStream file = new FileOutputStream(fileName);
+			OutputStream buffer = new BufferedOutputStream(file);
+			ObjectOutput output = new ObjectOutputStream(buffer);
+			try {
+				output.writeObject(this);
+			} finally {
+				output.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 }
