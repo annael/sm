@@ -334,6 +334,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	}
 
 	public static void disableU1Buttons() {
+		System.out.println("u1 disabled");
 		getU1H1().setEnabled(false);
 		getU1H2().setEnabled(false);
 		getU1H3().setEnabled(false);
@@ -343,6 +344,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	}
 
 	private static void enableU1Buttons() {
+		System.out.println("u2 disabled");
 		getU1H1().setEnabled(true);
 		getU1H2().setEnabled(true);
 		getU1H3().setEnabled(true);
@@ -464,59 +466,8 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			disableButtons();
 			changeStoneLabels();
 		} else {
-			Cell activePit = Mancala.getTurn().getActivePlayer().getCellByName(
-					source.getName());
-			boolean anotherTurn = false;
-			if (activePit.getStoneNumber() != 0) {
-				anotherTurn = Mancala.moveStones(activePit);
-				changeStoneLabels();
-			} else {
-				anotherTurn = true;
-			}
-
-			Player player1;
-			Player player2;
-
-			if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
-				player1 = Mancala.getTurn().getActivePlayer();
-				player2 = Mancala.getTurn().getNonActivePlayer();
-			} else {
-				player1 = Mancala.getTurn().getNonActivePlayer();
-				player2 = Mancala.getTurn().getActivePlayer();
-			}
-
-			boolean gameOver = Mancala.isGameOver(player1.getCells(), player2
-					.getCells());
-			System.out.println(gameOver);
-			if (gameOver) {
-				disableU1Buttons();
-				disableU2Buttons();
-				getMessage().setText(
-						getGameOverText(Mancala.getWinner(player1.getCells(),
-								player2.getCells())));
-
-				// write log
-				if (Mancala.getWinner(player1.getCells(), player2.getCells()) == 0) {
-					log.setWinner("Draw");
-				} else {
-					log.setWinner("Player "
-							+ Mancala.getWinner(player1.getCells(), player2
-									.getCells()));
-				}
-				log.setP1(player1.getPoints());
-				log.setP2(player2.getPoints());
-				log.writeData(filename);
-			}
-
-			if (!anotherTurn) {
-				Mancala.getTurn().changeTurn();
-				disableButtons();
-				getMessage().setText(
-						"It's now player "
-								+ Mancala.getTurn().getActivePlayer().getName()
-								+ " turn!");
-			}
+			Cell activePit = Mancala.getTurn().getActivePlayer().getCellByName(	source.getName());
+			Mancala.Play(activePit);
 		}
-
 	}
 }

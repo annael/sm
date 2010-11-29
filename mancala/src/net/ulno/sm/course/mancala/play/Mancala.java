@@ -70,16 +70,15 @@ public class Mancala {
 			player2 = Mancala.getTurn().getActivePlayer();
 		}
 
-		boolean gameOver = Mancala.isGameOver(player1.getCells(), player2.getCells());
-
+		boolean gameOver = Mancala.isGameOver(getTurn().getActivePlayer().getCells());
+		System.out.println(gameOver);
 		if (gameOver) {
+			System.out.println("really over");
 			MancalaGUI.disableU1Buttons();
 			MancalaGUI.disableU2Buttons();
 			MancalaGUI.getMessage().setText(
 					MancalaGUI.getGameOverText(Mancala.getWinner(player1.getCells(),
 							player2.getCells())));
-
-			// write log
 		}
 
 		if (!anotherTurn) {
@@ -166,21 +165,14 @@ public class Mancala {
 	 *            pits of nonactive player
 	 * @return true if game is over, false if not
 	 */
-	public static boolean isGameOver(List<Cell> player, List<Cell> enemy) {
+	public static boolean isGameOver(List<Cell> player) {
 		int result = 0;
-		int result2 = 0;
 		for (Cell c : player) {
 			if (!c.isMancala()) {
 				result += c.getStoneNumber();				
 			}
-		}
-
-		for (Cell c : enemy) {
-			if (!c.isMancala()) {
-				result2 += c.getStoneNumber();
-			}
-		}
-		return result == 0 || result2 == 0;
+		}		
+		return result == 0 ;
 	}
 
 	/**
