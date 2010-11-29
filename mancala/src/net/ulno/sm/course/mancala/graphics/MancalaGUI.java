@@ -455,10 +455,12 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		} else if (source.getName().equals("newGame")) {
 			Mancala.getTurn().getActivePlayer().generateCells();
 			Mancala.getTurn().getNonActivePlayer().generateCells();
+			enableU1Buttons();
+			enableU2Buttons();
 			if (Mancala.getTurn().getActivePlayer().getName().equals("2")) {
 				Mancala.getTurn().changeTurn();
-				disableButtons();
 			}
+			disableButtons();
 			changeStoneLabels();
 		} else {
 			Cell activePit = Mancala.getTurn().getActivePlayer().getCellByName(
