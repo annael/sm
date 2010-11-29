@@ -9,8 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import net.ulno.sm.course.mancala.model.Cell;
+import net.ulno.sm.course.mancala.model.Logger;
 import net.ulno.sm.course.mancala.model.Player;
 import net.ulno.sm.course.mancala.play.Mancala;
 
@@ -25,24 +27,25 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	private JPanel titlePanel;
 	private JLabel titleLabel;
 	private JPanel boardPanel;
-	private static JButton u1h1;
-	private static JButton u1h2;
-	private static JButton u1h3;
-	private static JButton u1h4;
-	private static JButton u1h5;
-	private static JButton u1h6;
-	private static JButton u2h1;
-	private static JButton u2h2;
-	private static JButton u2h3;
-	private static JButton u2h4;
-	private static JButton u2h5;
-	private static JButton u2h6;
+	private JButton u1h1;
+	private JButton u1h2;
+	private JButton u1h3;
+	private JButton u1h4;
+	private JButton u1h5;
+	private JButton u1h6;
+	private JButton u2h1;
+	private JButton u2h2;
+	private JButton u2h3;
+	private JButton u2h4;
+	private JButton u2h5;
+	private JButton u2h6;
 	private JButton endTurn;
 	private JButton showLog;
 	private JButton newGame;
-	private static JLabel u1total;
-	private static JLabel u2total;
-	private static JLabel workMsg;
+	private JLabel u1total;
+	private JLabel u2total;
+	private JLabel workMsg;
+	private Logger log;
 
 	public MancalaGUI() {
 		this.setTitle("Mancala");
@@ -55,9 +58,18 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		add(getTitlePanel(), BorderLayout.NORTH);
 		add(getBoardPanel(), BorderLayout.CENTER);
 		disableButtons();
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		try {
+			log = new Logger(filename);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log = new Logger();
+		}
+
 	}
 
-	private static JLabel getUser2Total() {
+	private JLabel getUser2Total() {
 		if (u2total == null) {
 			u2total = new JLabel();
 			u2total.setText("0");
@@ -65,7 +77,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2total;
 	}
 
-	private static JLabel getUser1Total() {
+	private JLabel getUser1Total() {
 		if (u1total == null) {
 			u1total = new JLabel();
 			u1total.setText("0");
@@ -73,7 +85,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1total;
 	}
 
-	public static JLabel getMessage() {
+	private JLabel getMessage() {
 		if (workMsg == null) {
 			workMsg = new JLabel();
 			workMsg.setText("It's now player "
@@ -148,7 +160,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			getU2H4().addActionListener(this);
 			getU2H5().addActionListener(this);
 			getU2H6().addActionListener(this);
-			getEndTurn().addActionListener(this);
+			getShowLog().addActionListener(this);
 			getNewGame().addActionListener(this);
 		}
 		return boardPanel;
@@ -181,7 +193,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return newGame;
 	}
 
-	private static JButton getU1H6() {
+	private JButton getU1H6() {
 		if (u1h6 == null) {
 			u1h6 = new JButton();
 			u1h6.setText("4");
@@ -190,7 +202,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h6;
 	}
 
-	private static JButton getU1H5() {
+	private JButton getU1H5() {
 		if (u1h5 == null) {
 			u1h5 = new JButton();
 			u1h5.setText("4");
@@ -199,7 +211,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h5;
 	}
 
-	private static JButton getU1H4() {
+	private JButton getU1H4() {
 		if (u1h4 == null) {
 			u1h4 = new JButton();
 			u1h4.setText("4");
@@ -208,7 +220,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h4;
 	}
 
-	private static JButton getU1H3() {
+	private JButton getU1H3() {
 		if (u1h3 == null) {
 			u1h3 = new JButton();
 			u1h3.setText("4");
@@ -217,7 +229,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h3;
 	}
 
-	private static JButton getU1H2() {
+	private JButton getU1H2() {
 		if (u1h2 == null) {
 			u1h2 = new JButton();
 			u1h2.setText("4");
@@ -226,7 +238,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h2;
 	}
 
-	private static JButton getU1H1() {
+	private JButton getU1H1() {
 		if (u1h1 == null) {
 			u1h1 = new JButton();
 			u1h1.setText("4");
@@ -235,7 +247,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u1h1;
 	}
 
-	private static JButton getU2H6() {
+	private JButton getU2H6() {
 		if (u2h6 == null) {
 			u2h6 = new JButton();
 			u2h6.setText("4");
@@ -244,7 +256,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2h6;
 	}
 
-	private static JButton getU2H5() {
+	private JButton getU2H5() {
 		if (u2h5 == null) {
 			u2h5 = new JButton();
 			u2h5.setText("4");
@@ -253,7 +265,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2h5;
 	}
 
-	private static JButton getU2H4() {
+	private JButton getU2H4() {
 		if (u2h4 == null) {
 			u2h4 = new JButton();
 			u2h4.setText("4");
@@ -262,7 +274,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2h4;
 	}
 
-	private static JButton getU2H3() {
+	private JButton getU2H3() {
 		if (u2h3 == null) {
 			u2h3 = new JButton();
 			u2h3.setText("4");
@@ -271,7 +283,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2h3;
 	}
 
-	private static JButton getU2H2() {
+	private JButton getU2H2() {
 		if (u2h2 == null) {
 			u2h2 = new JButton();
 			u2h2.setText("4");
@@ -280,7 +292,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		return u2h2;
 	}
 
-	private static JButton getU2H1() {
+	private JButton getU2H1() {
 		if (u2h1 == null) {
 			u2h1 = new JButton();
 			u2h1.setText("4");
@@ -311,7 +323,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	/**
 	 * Disables button of non-active player
 	 */
-	public static void disableButtons() {
+	private void disableButtons() {
 		if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
 			disableU2Buttons();
 			enableU1Buttons();
@@ -321,7 +333,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void disableU1Buttons() {
+	private void disableU1Buttons() {
 		getU1H1().setEnabled(false);
 		getU1H2().setEnabled(false);
 		getU1H3().setEnabled(false);
@@ -330,7 +342,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU1H6().setEnabled(false);
 	}
 
-	private static void enableU1Buttons() {
+	private void enableU1Buttons() {
 		getU1H1().setEnabled(true);
 		getU1H2().setEnabled(true);
 		getU1H3().setEnabled(true);
@@ -339,7 +351,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU1H6().setEnabled(true);
 	}
 
-	public static void disableU2Buttons() {
+	private void disableU2Buttons() {
 		getU2H1().setEnabled(false);
 		getU2H2().setEnabled(false);
 		getU2H3().setEnabled(false);
@@ -348,7 +360,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU2H6().setEnabled(false);
 	}
 
-	private static void enableU2Buttons() {
+	private void enableU2Buttons() {
 		getU2H1().setEnabled(true);
 		getU2H2().setEnabled(true);
 		getU2H3().setEnabled(true);
@@ -357,7 +369,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU2H6().setEnabled(true);
 	}
 
-	public static void changeStoneLabels() {
+	private void changeStoneLabels() {
 		if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
 			changeU1StoneLabels(Mancala.getTurn().getActivePlayer());
 			changeU2StoneLabels(Mancala.getTurn().getNonActivePlayer());
@@ -368,7 +380,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 
 	}
 
-	public static void changeU1StoneLabels(Player u1) {
+	private void changeU1StoneLabels(Player u1) {
 		getU1H1().setText(
 				String.valueOf(u1.getCellByName(getU1H1().getName())
 						.getStones()));
@@ -392,7 +404,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 				String.valueOf(u1.getCellByName("u1h0").getStones()));
 	}
 
-	public static void changeU2StoneLabels(Player u2) {
+	private void changeU2StoneLabels(Player u2) {
 		getU2H1().setText(
 				String.valueOf(u2.getCellByName(getU2H1().getName())
 						.getStones()));
@@ -416,7 +428,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 				String.valueOf(u2.getCellByName("u2h0").getStones()));
 	}
 
-	public static String getGameOverText(int win) {
+	private String getGameOverText(int win) {
 		switch (win) {
 		case 0:
 			return "Game ended with a draw";
@@ -435,24 +447,74 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton) e.getSource();
 		if (source.getName().equals("showLog")) {
-
-			// read log
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					new LoggerGUI().setVisible(true);
+				}
+			});
 		} else if (source.getName().equals("newGame")) {
 			Mancala.getTurn().getActivePlayer().generateCells();
 			Mancala.getTurn().getNonActivePlayer().generateCells();
+			enableU1Buttons();
+			enableU2Buttons();
 			if (Mancala.getTurn().getActivePlayer().getName().equals("2")) {
 				Mancala.getTurn().changeTurn();
-				MancalaGUI.getMessage().setText(
-						"It's now player "
-								+ Mancala.getTurn().getActivePlayer().getName()
-								+ " turn!");
-				disableButtons();
 			}
+			disableButtons();
 			changeStoneLabels();
 		} else {
 			Cell activePit = Mancala.getTurn().getActivePlayer().getCellByName(
 					source.getName());
-			Mancala.Play(activePit);			
+			boolean anotherTurn = false;
+			if (activePit.getStones() != 0) {
+				anotherTurn = Mancala.moveStones(activePit);
+				changeStoneLabels();
+			} else {
+				anotherTurn = true;
+			}
+
+			Player player1;
+			Player player2;
+
+			if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
+				player1 = Mancala.getTurn().getActivePlayer();
+				player2 = Mancala.getTurn().getNonActivePlayer();
+			} else {
+				player1 = Mancala.getTurn().getNonActivePlayer();
+				player2 = Mancala.getTurn().getActivePlayer();
+			}
+
+			boolean gameOver = Mancala.isGameOver(player1.getCells(), player2
+					.getCells());
+
+			if (gameOver) {
+				disableU1Buttons();
+				disableU2Buttons();
+				getMessage().setText(
+						getGameOverText(Mancala.getWinner(player1.getCells(),
+								player2.getCells())));
+
+				// write log
+				if (Mancala.getWinner(player1.getCells(), player2.getCells()) == 0) {
+					log.setWinner("Draw");
+				} else {
+					log.setWinner("Player "
+							+ Mancala.getWinner(player1.getCells(), player2
+									.getCells()));
+				}
+				log.setP1(player1.getPoints());
+				log.setP2(player2.getPoints());
+				log.writeData(filename);
+			}
+
+			if (!anotherTurn) {
+				Mancala.getTurn().changeTurn();
+				disableButtons();
+				getMessage().setText(
+						"It's now player "
+								+ Mancala.getTurn().getActivePlayer().getName()
+								+ " turn!");
+			}
 		}
 
 	}
