@@ -453,6 +453,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 				}
 			});
 		} else if (source.getName().equals("newGame")) {
+			Mancala.generateStones();
 			Mancala.getTurn().getActivePlayer().generateCells();
 			Mancala.getTurn().getNonActivePlayer().generateCells();
 			enableU1Buttons();
@@ -486,7 +487,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 
 			boolean gameOver = Mancala.isGameOver(player1.getCells(), player2
 					.getCells());
-
+			System.out.println(gameOver);
 			if (gameOver) {
 				disableU1Buttons();
 				disableU2Buttons();

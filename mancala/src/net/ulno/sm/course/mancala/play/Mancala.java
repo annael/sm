@@ -35,7 +35,7 @@ public class Mancala {
 
 	}
 
-	private static void generateStones() {
+	public static void generateStones() {
 		for (int i = 0; i<48; i++){
 			stones.push(new Stone(i));
 		}		
@@ -109,21 +109,17 @@ public class Mancala {
 		for (int i = 1; i < c; i++) {	
 			next = getNextCell(last);
 			next.addStone(cell.getStone());			
-			System.out.println("owner " + next.getOwner().getName() + ", cell " + (next.getOrderNr()));
 			last = next;
 		}
 		// check for capture
-		if (!last.isMancala() && last.getStoneNumber() == 1 ) {
-			int opposite = getOppositePitNumber(last.getOrderNr());
-			if (last.getOwner() == cell.getOwner()) {
-				System.out.println("captured op: " + opposite);
-				while ( !enemyCells.get(opposite).getAllStones().empty() ){
-					playerCell.get(0).addStone( enemyCells.get(opposite).getStone() );
-				}
-				playerCell.get(0).addStone(last.getStone());
-			} 
-		}
-		System.out.println("end of play");		
+		int opposite = getOppositePitNumber(last.getOrderNr());
+		if (!last.isMancala() && last.getStoneNumber() == 1 && last.getOwner() == cell.getOwner()
+				&& last.getOwner() == cell.getOwner() && !enemyCells.get(opposite).getAllStones().empty()) {
+			while ( !enemyCells.get(opposite).getAllStones().empty() ){
+				playerCell.get(0).addStone( enemyCells.get(opposite).getStone() );
+			}
+			playerCell.get(0).addStone(last.getStone());
+		}		
 		if (last.isMancala()) {
 			// new turn 
 			return true;

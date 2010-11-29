@@ -70,10 +70,8 @@ public final class Logger implements Serializable {
 				input.close();
 			}
 		} catch (ClassNotFoundException ex) {
-			//System.out.println("EXCEPTION");
 			ex.printStackTrace();
 		} catch (IOException ex) {
-			//System.out.println("EXCEPTION");
 			throw ex;
 		}
 	}
