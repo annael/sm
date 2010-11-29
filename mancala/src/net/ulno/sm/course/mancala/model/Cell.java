@@ -5,7 +5,7 @@ public class Cell {
 	private Player owner;
 	private int stones;
 	private boolean mancala;
-	private int orderNr; // 0-6, neighbour is n-1, 0 is mancala
+	private int orderNr; // left to right: 6-5-4-3-2-1; 0 is mancala
 	private String name;
 
 	public String getName() {

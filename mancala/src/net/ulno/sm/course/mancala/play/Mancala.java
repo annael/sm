@@ -40,8 +40,7 @@ public class Mancala {
 	}
 	
 	public static void Play (Cell activePit)
-	{
-		
+	{		
 		boolean anotherTurn = false;
 		if (activePit.getStones() != 0) {
 			anotherTurn = Mancala.moveStones(activePit);
@@ -93,31 +92,20 @@ public class Mancala {
 	 */
 	public static boolean moveStones(Cell cell) {
 		List<Cell> playerCell = cell.getOwner().getCells();
-		List<Cell> enemyCells = getTurn().getNonActivePlayer().getCells();
-		Cell last = null;
-
+		List<Cell> enemyCells = getTurn().getNonActivePlayer().getCells();		
+		Cell last = cell;
+		Cell next = null;
 		for (int i = 1; i < cell.getStones() + 1; i++) {
-
-			if (cell.getOrderNr() - i >= 0) {
-				playerCell.get(cell.getOrderNr() - i).addStone();
-				last = playerCell.get(cell.getOrderNr() - i);
-			} else {
-				System.out.println(cell.getStones() - i + 1);
-
-				for (int j = 6; j > (6 - cell.getStones() + i - 1); j--) {
-					if (j > 0) {
-						enemyCells.get(j).addStone();
-						last = enemyCells.get(j);
-					}
-				}
-				break;
-			}
+			next = getNextCell(last);
+			next.addStone();
+			System.out.println("owner " + next.getOwner().getName() + ", cell " + (next.getOrderNr()));
+			last = next;
 		}
-		// TODO check if capture
+		// check for capture
 		if (!last.isMancala() && last.getStones() == 1 ) {
 			int opposite = getOppositePitNumber(last.getOrderNr());
-			System.out.println("op:" + opposite);
 			if (last.getOwner() == cell.getOwner()) {
+				System.out.println("captured op: " + opposite);
 				playerCell.get(0)
 						.addStone(
 								enemyCells.get(opposite).getStones()
@@ -126,15 +114,32 @@ public class Mancala {
 				last.removeAll();
 			} 
 		}
-
 		cell.removeAll();
-
+		System.out.println("end of play");		
 		if (last.isMancala()) {
-			// new turn somehow
+			// new turn 
 			return true;
 		}
-
 		return false;
+	}
+
+
+	private static Cell getNextCell(Cell last) {
+		int nr = last.getOrderNr();
+		if (nr > 1) {
+			return last.getOwner().getCellByOrder(nr - 1);
+		}
+		else if (nr == 1) {
+			if (last.getOwner() == getTurn().getActivePlayer()) {
+				return last.getOwner().getCellByOrder(0);
+			}
+			else {
+				return getTurn().getActivePlayer().getCellByOrder(6);
+			}
+		}
+		else {
+			return getTurn().getNonActivePlayer().getCellByOrder(6);
+		}		
 	}
 
 	/**
