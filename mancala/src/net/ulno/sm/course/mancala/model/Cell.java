@@ -1,12 +1,21 @@
 package net.ulno.sm.course.mancala.model;
 
+import java.util.Stack;
+
 public class Cell {
 
 	private Player owner;
-	private int stones;
 	private boolean mancala;
-	private int orderNr; // 0-6, neighbour is n-1, 0 is mancala
+	private int orderNr; // left to right: 6-5-4-3-2-1; 0 is mancala
 	private String name;
+	private Stack<Stone> stones;
+	
+	public Cell(Player owner, boolean mancala, int order) {
+		this.owner = owner;
+		this.mancala = mancala;
+		this.orderNr = order;
+		this.stones = new Stack<Stone>();
+	}
 
 	public String getName() {
 		return name;
@@ -16,27 +25,12 @@ public class Cell {
 		this.name = name;
 	}
 
-	public void removeStone() {
-		this.stones--;
+	public Stone getStone() {
+		return this.stones.pop();
 	}
 
-	public void removeAll() {
-		this.stones = 0;
-	}
-
-	public void addStone() {
-		this.stones++;
-	}
-
-	public void addStone(int stones) {
-		this.stones += stones;
-	}
-
-	public Cell(Player owner, int stones, boolean mancala, int order) {
-		this.owner = owner;
-		this.stones = stones;
-		this.mancala = mancala;
-		this.orderNr = order;
+	public void addStone(Stone stone) {
+		this.stones.push(stone);
 	}
 
 	public int getOrderNr() {
@@ -55,13 +49,13 @@ public class Cell {
 		this.owner = owner;
 	}
 
-	public int getStones() {
+	public int getStoneNumber() {
+		return stones.size();
+	}
+	
+	public Stack<Stone> getAllStones() {
 		return stones;
-	}
-
-	public void setStones(int stones) {
-		this.stones = stones;
-	}
+	}	
 
 	public boolean isMancala() {
 		return mancala;

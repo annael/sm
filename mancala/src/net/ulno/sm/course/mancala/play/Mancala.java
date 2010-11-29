@@ -1,15 +1,18 @@
 package net.ulno.sm.course.mancala.play;
 
 import java.util.List;
+import java.util.Stack;
 
 import net.ulno.sm.course.mancala.graphics.MancalaGUI;
 import net.ulno.sm.course.mancala.model.Cell;
 import net.ulno.sm.course.mancala.model.Player;
 import net.ulno.sm.course.mancala.model.Turn;
+import net.ulno.sm.course.mancala.model.Stone;
 
 public class Mancala {
 
 	static Turn turn;
+	public static Stack<Stone> stones = new Stack<Stone>();
 
 	/**
 	 * Main method to run, players and the field is created
@@ -17,6 +20,7 @@ public class Mancala {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		generateStones();
 		Player p1 = new Player(0, true, "1");
 		Player p2 = new Player(0, false, "2");
 		p1.generateCells();
@@ -31,6 +35,12 @@ public class Mancala {
 
 	}
 
+	private static void generateStones() {
+		for (int i = 0; i<48; i++){
+			stones.push(new Stone(i));
+		}		
+	}
+
 	public static Turn getTurn() {
 		return turn;
 	}
@@ -38,7 +48,49 @@ public class Mancala {
 	public static void setTurn(Turn turn) {
 		Mancala.turn = turn;
 	}
+	
+	public static void Play (Cell activePit)
+	{		
+		boolean anotherTurn = false;
+		if (activePit.getStoneNumber() != 0) {
+			anotherTurn = Mancala.moveStones(activePit);
+			MancalaGUI.changeStoneLabels();
+		} else {
+			anotherTurn = true;
+		}
 
+		Player player1;
+		Player player2;
+
+		if (Mancala.getTurn().getActivePlayer().getName().equals("1")) {
+			player1 = Mancala.getTurn().getActivePlayer();
+			player2 = Mancala.getTurn().getNonActivePlayer();
+		} else {
+			player1 = Mancala.getTurn().getNonActivePlayer();
+			player2 = Mancala.getTurn().getActivePlayer();
+		}
+
+		boolean gameOver = Mancala.isGameOver(player1.getCells(), player2.getCells());
+
+		if (gameOver) {
+			MancalaGUI.disableU1Buttons();
+			MancalaGUI.disableU2Buttons();
+			MancalaGUI.getMessage().setText(
+					MancalaGUI.getGameOverText(Mancala.getWinner(player1.getCells(),
+							player2.getCells())));
+
+			// write log
+		}
+
+		if (!anotherTurn) {
+			Mancala.getTurn().changeTurn();
+			MancalaGUI.disableButtons();
+			MancalaGUI.getMessage().setText(
+					"It's now player "
+							+ Mancala.getTurn().getActivePlayer().getName()
+							+ " turn!");
+		}
+	}
 	/**
 	 * Main method for interaction with the game (playing) Moves the stones
 	 * according to the rules, checks if game is over or not
@@ -50,55 +102,52 @@ public class Mancala {
 	 */
 	public static boolean moveStones(Cell cell) {
 		List<Cell> playerCell = cell.getOwner().getCells();
-		List<Cell> enemyCells = getTurn().getNonActivePlayer().getCells();
-		Cell last = null;
-
-		for (int i = 1; i < cell.getStones() + 1; i++) {
-
-			if (cell.getOrderNr() - i >= 0) {
-				playerCell.get(cell.getOrderNr() - i).addStone();
-				last = playerCell.get(cell.getOrderNr() - i);
-			} else {
-				System.out.println(cell.getStones() - i + 1);
-
-				for (int j = 6; j > (6 - cell.getStones() + i - 1); j--) {
-					if (j > 0) {
-						enemyCells.get(j).addStone();
-						last = enemyCells.get(j);
-					}
-				}
-				break;
-			}
+		List<Cell> enemyCells = getTurn().getNonActivePlayer().getCells();		
+		Cell last = cell;
+		Cell next = null;
+		int c = cell.getStoneNumber() + 1;
+		for (int i = 1; i < c; i++) {	
+			next = getNextCell(last);
+			next.addStone(cell.getStone());			
+			System.out.println("owner " + next.getOwner().getName() + ", cell " + (next.getOrderNr()));
+			last = next;
 		}
-		// TODO check if capture
-		if (!last.isMancala() && last.getStones() == 1) {
+		// check for capture
+		if (!last.isMancala() && last.getStoneNumber() == 1 ) {
 			int opposite = getOppositePitNumber(last.getOrderNr());
-			System.out.println("op:" + opposite);
 			if (last.getOwner() == cell.getOwner()) {
-				playerCell.get(0)
-						.addStone(
-								enemyCells.get(opposite).getStones()
-										+ last.getStones());
-				enemyCells.get(opposite).removeAll();
-				last.removeAll();
-			} else {
-				playerCell.get(0)
-						.addStone(
-								playerCell.get(opposite).getStones()
-										+ last.getStones());
-				playerCell.get(opposite).removeAll();
-				last.removeAll();
-			}
+				System.out.println("captured op: " + opposite);
+				while ( !enemyCells.get(opposite).getAllStones().empty() ){
+					playerCell.get(0).addStone( enemyCells.get(opposite).getStone() );
+				}
+				playerCell.get(0).addStone(last.getStone());
+			} 
 		}
-
-		cell.removeAll();
-
+		System.out.println("end of play");		
 		if (last.isMancala()) {
-			// new turn somehow
+			// new turn 
 			return true;
 		}
-
 		return false;
+	}
+
+
+	private static Cell getNextCell(Cell last) {
+		int nr = last.getOrderNr();
+		if (nr > 1) {
+			return last.getOwner().getCellByOrder(nr - 1);
+		}
+		else if (nr == 1) {
+			if (last.getOwner() == getTurn().getActivePlayer()) {
+				return last.getOwner().getCellByOrder(0);
+			}
+			else {
+				return getTurn().getActivePlayer().getCellByOrder(6);
+			}
+		}
+		else {
+			return getTurn().getNonActivePlayer().getCellByOrder(6);
+		}		
 	}
 
 	/**
@@ -126,13 +175,13 @@ public class Mancala {
 		int result2 = 0;
 		for (Cell c : player) {
 			if (!c.isMancala()) {
-				result += c.getStones();
+				result += c.getStoneNumber();				
 			}
 		}
 
 		for (Cell c : enemy) {
 			if (!c.isMancala()) {
-				result2 += c.getStones();
+				result2 += c.getStoneNumber();
 			}
 		}
 		return result == 0 || result2 == 0;
@@ -151,11 +200,11 @@ public class Mancala {
 		int result1 = 0;
 		int result2 = 0;
 		for (Cell c : player1) {
-			result1 += c.getStones();
+			result1 += c.getStoneNumber();
 		}
 
 		for (Cell c : player2) {
-			result2 += c.getStones();
+			result2 += c.getStoneNumber();
 		}
 
 		if (result1 > result2) {

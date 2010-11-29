@@ -43,7 +43,7 @@ public final class Logger implements Serializable {
 		this.p2 = p2;
 	}
 
-	public Logger(String winner, int p1, int p2) {
+	public Logger(String winner, int p1, int p2) {		
 		this.winner = winner;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -70,8 +70,10 @@ public final class Logger implements Serializable {
 				input.close();
 			}
 		} catch (ClassNotFoundException ex) {
+			//System.out.println("EXCEPTION");
 			ex.printStackTrace();
 		} catch (IOException ex) {
+			//System.out.println("EXCEPTION");
 			throw ex;
 		}
 	}
@@ -90,5 +92,4 @@ public final class Logger implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
 }

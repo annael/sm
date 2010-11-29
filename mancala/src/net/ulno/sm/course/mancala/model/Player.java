@@ -3,6 +3,8 @@ package net.ulno.sm.course.mancala.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ulno.sm.course.mancala.play.Mancala;
+
 public class Player {
 
 	private int points;
@@ -51,13 +53,13 @@ public class Player {
 
 	public List<Cell> generateCells() {
 		List<Cell> cells = new ArrayList<Cell>();
-		Cell p1Mancala = new Cell(this, 0, true, 0);
-		Cell p1c1 = new Cell(this, 4, false, 1);
-		Cell p1c2 = new Cell(this, 4, false, 2);
-		Cell p1c3 = new Cell(this, 4, false, 3);
-		Cell p1c4 = new Cell(this, 4, false, 4);
-		Cell p1c5 = new Cell(this, 4, false, 5);
-		Cell p1c6 = new Cell(this, 4, false, 6);
+		Cell p1Mancala = new Cell(this, true, 0);
+		Cell p1c1 = new Cell(this, false, 1);
+		Cell p1c2 = new Cell(this, false, 2);
+		Cell p1c3 = new Cell(this, false, 3);
+		Cell p1c4 = new Cell(this, false, 4);
+		Cell p1c5 = new Cell(this, false, 5);
+		Cell p1c6 = new Cell(this, false, 6);		
 		cells.add(p1Mancala);
 		cells.add(p1c1);
 		cells.add(p1c2);
@@ -65,8 +67,15 @@ public class Player {
 		cells.add(p1c4);
 		cells.add(p1c5);
 		cells.add(p1c6);
+		
 		for (Cell c : cells) {
 			c.setName("u" + getName() + "h" + c.getOrderNr());
+			if (c.getOrderNr() != 0){
+				for (int i = 0; i < 4; i++){					
+					c.addStone(Mancala.stones.pop());
+				}	
+			}
+					
 		}
 
 		this.setCells(cells);
