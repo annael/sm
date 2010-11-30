@@ -23,7 +23,7 @@ import org.dyno.visual.swing.layouts.Leading;
 public class MancalaGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final String filename = "/home/anna/logM.txt";
+	public static final String filename = "/home/demente/logM.txt";
 	private JPanel titlePanel;
 	private JLabel titleLabel;
 	private JPanel boardPanel;
@@ -45,7 +45,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	private static JLabel u1total;
 	private static JLabel u2total;
 	private static JLabel workMsg;
-	private Logger log;
+	public static Logger log;
 
 	public MancalaGUI() {
 		this.setTitle("Mancala");
@@ -138,8 +138,6 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			boardPanel.add(getMessage(), new Constraints(new Leading(170, 12,
 					12), new Leading(10, 12, 12)));
 
-			// boardPanel.add(getEndTurn(), new Constraints(new Leading(380, 12,
-			// 12), new Leading(200, 12, 12)));
 
 			boardPanel.add(getShowLog(), new Constraints(new Leading(380, 12,
 					12), new Leading(200, 12, 12)));
@@ -334,7 +332,6 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	}
 
 	public static void disableU1Buttons() {
-		System.out.println("u1 disabled");
 		getU1H1().setEnabled(false);
 		getU1H2().setEnabled(false);
 		getU1H3().setEnabled(false);
@@ -344,7 +341,6 @@ public class MancalaGUI extends JFrame implements ActionListener {
 	}
 
 	private static void enableU1Buttons() {
-		System.out.println("u2 disabled");
 		getU1H1().setEnabled(true);
 		getU1H2().setEnabled(true);
 		getU1H3().setEnabled(true);

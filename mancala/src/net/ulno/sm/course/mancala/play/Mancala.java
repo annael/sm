@@ -35,6 +35,9 @@ public class Mancala {
 
 	}
 
+	/**
+	 * Generates new stack of stones
+	 */
 	public static void generateStones() {
 		for (int i = 0; i<48; i++){
 			stones.push(new Stone(i));
@@ -49,6 +52,10 @@ public class Mancala {
 		Mancala.turn = turn;
 	}
 	
+	/**
+	 * Method responsible for the game logic
+	 * @param activePit	pit that is played now
+	 */
 	public static void Play (Cell activePit)
 	{		
 		boolean anotherTurn = false;
@@ -70,15 +77,15 @@ public class Mancala {
 			player2 = Mancala.getTurn().getActivePlayer();
 		}
 
-		boolean gameOver = Mancala.isGameOver(getTurn().getActivePlayer().getCells());
-		System.out.println(gameOver);
+		boolean gameOver = Mancala.isGameOver();
 		if (gameOver) {
-			System.out.println("really over");
 			MancalaGUI.disableU1Buttons();
 			MancalaGUI.disableU2Buttons();
 			MancalaGUI.getMessage().setText(
-					MancalaGUI.getGameOverText(Mancala.getWinner(player1.getCells(),
-							player2.getCells())));
+					MancalaGUI.getGameOverText(Mancala.getWinner(player1,
+							player2)));
+			
+			writeLog(player1, player2);
 		}
 
 		if (!anotherTurn) {
@@ -90,6 +97,24 @@ public class Mancala {
 							+ " turn!");
 		}
 	}
+	
+	/**
+	 * Write winner and points to the log file
+	 * @param player1	first player
+	 * @param player2	second player
+	 */
+	public static void writeLog(Player player1, Player player2){
+		if (getWinner(player1, player2) == 0) {
+			MancalaGUI.log.addWinner("Draw");
+		} else {
+			MancalaGUI.log.addWinner("Player "
+					+ Mancala.getWinner(player1, player2));
+		}
+		MancalaGUI.log.addP1(player1.getPoints());
+		MancalaGUI.log.addP2(player2.getPoints());
+		MancalaGUI.log.writeData(MancalaGUI.filename);
+	}
+	
 	/**
 	 * Main method for interaction with the game (playing) Moves the stones
 	 * according to the rules, checks if game is over or not
@@ -126,7 +151,11 @@ public class Mancala {
 		return false;
 	}
 
-
+/**
+ * Return the next cell
+ * @param last	last cell in the chain
+ * @return	next cell
+ */
 	private static Cell getNextCell(Cell last) {
 		int nr = last.getOrderNr();
 		if (nr > 1) {
@@ -157,48 +186,56 @@ public class Mancala {
 	}
 
 	/**
-	 * Checks if the game is over
-	 * 
-	 * @param player
-	 *            pits of the active player
-	 * @param enemy
-	 *            pits of nonactive player
+	 * Checks if the game is over (no stones left on field)
 	 * @return true if game is over, false if not
 	 */
-	public static boolean isGameOver(List<Cell> player) {
-		int result = 0;
-		for (Cell c : player) {
-			if (!c.isMancala()) {
-				result += c.getStoneNumber();				
-			}
-		}		
-		return result == 0 ;
+public static boolean isGameOver(){
+	List<Cell> c1 = turn.getActivePlayer().getCells();
+	List<Cell> c2 = turn.getNonActivePlayer().getCells();
+	int total = 0;
+	for (Cell c : c1){
+		if (!c.isMancala()){
+			total += c.getStoneNumber();
+		}
 	}
+	
+	for (Cell c : c2){
+		if (!c.isMancala()){
+			total += c.getStoneNumber();
+		}
+	}
+	
+	return total == 0;
+}
+	
 
 	/**
 	 * Returns number of the winner or zero if it's a draw
 	 * 
 	 * @param player1
-	 *            pits of player 1
+	 *             player 1
 	 * @param player2
-	 *            pits of player 2
+	 *             player 2
 	 * @return 0 for draw, 1 if winner is player 1, 2 if winner is player 2
 	 */
-	public static int getWinner(List<Cell> player1, List<Cell> player2) {
+	public static int getWinner(Player player1, Player player2) {
 		int result1 = 0;
 		int result2 = 0;
-		for (Cell c : player1) {
+		for (Cell c : player1.getCells()) {
 			result1 += c.getStoneNumber();
 		}
 
-		for (Cell c : player2) {
+		for (Cell c : player2.getCells()) {
 			result2 += c.getStoneNumber();
 		}
+		
+		player1.setPoints(result1);
+		player2.setPoints(result2);
 
 		if (result1 > result2) {
-			return 1;
+			return Integer.parseInt(player1.getName());
 		} else if (result1 < result2) {
-			return 2;
+			return Integer.parseInt(player2.getName());
 
 		} else {
 			return 0;
