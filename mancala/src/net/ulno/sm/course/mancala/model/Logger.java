@@ -12,47 +12,63 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Logger implements Serializable {
 	private static final long serialVersionUID = 3652765666114489556L;
-	private String winner;
-	private int p1;
-	private int p2;
+	private List<String> winner;
+	private List<Integer> p1;
+	private List<Integer> p2;
 
-	public String getWinner() {
+
+	public List<String> getWinner() {
 		return winner;
 	}
 
-	public void setWinner(String winner) {
+	public void setWinner(List<String> winner) {
 		this.winner = winner;
 	}
 
-	public int getP1() {
+	public List<Integer> getP1() {
 		return p1;
 	}
 
-	public void setP1(int p1) {
+	public void setP1(List<Integer> p1) {
 		this.p1 = p1;
 	}
 
-	public int getP2() {
+	public List<Integer> getP2() {
 		return p2;
 	}
 
-	public void setP2(int p2) {
+	public void setP2(List<Integer> p2) {
 		this.p2 = p2;
 	}
 
-	public Logger(String winner, int p1, int p2) {		
-		this.winner = winner;
-		this.p1 = p1;
-		this.p2 = p2;
+	public void addWinner(String winner){
+		this.winner.add(winner);
 	}
+	
+	public void addP1(Integer p1){
+		this.p1.add(p1);
+	}
+	
+	public void addP2(Integer p2){
+		this.p2.add(p2);
+	}
+	
+	
+//	public Logger(String winner, int p1, int p2) {		
+//		this.winner = winner;
+//		this.p1 = p1;
+//		this.p2 = p2;
+//	}
 
 	public Logger() {
-		winner = "";
-		p1 = 0;
-		p2 = 0;
+		winner = new ArrayList<String>();
+		p1 = new ArrayList<Integer>();
+		p2 = new ArrayList<Integer>();
 	}
 
 	public Logger(String fileName) throws Exception {
