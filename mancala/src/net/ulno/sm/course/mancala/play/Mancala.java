@@ -192,20 +192,21 @@ public class Mancala {
 public static boolean isGameOver(){
 	List<Cell> c1 = turn.getActivePlayer().getCells();
 	List<Cell> c2 = turn.getNonActivePlayer().getCells();
-	int total = 0;
+	int total1 = 0;
+	int total2 = 0;
 	for (Cell c : c1){
 		if (!c.isMancala()){
-			total += c.getStoneNumber();
+			total1 += c.getStoneNumber();
 		}
 	}
 	
 	for (Cell c : c2){
 		if (!c.isMancala()){
-			total += c.getStoneNumber();
+			total2 += c.getStoneNumber();
 		}
 	}
 	
-	return total == 0;
+	return total1 == 0 || total2==0;
 }
 	
 
