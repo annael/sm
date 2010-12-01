@@ -23,7 +23,7 @@ import org.dyno.visual.swing.layouts.Leading;
 public class MancalaGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	public static final String filename = "/home/demente/logM.txt";
+	public static final String filename = "/home/anna/logM.txt";
 	private JPanel titlePanel;
 	private JLabel titleLabel;
 	private JPanel boardPanel;
@@ -340,7 +340,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU1H6().setEnabled(false);
 	}
 
-	private static void enableU1Buttons() {
+	public static void enableU1Buttons() {
 		getU1H1().setEnabled(true);
 		getU1H2().setEnabled(true);
 		getU1H3().setEnabled(true);
@@ -358,7 +358,7 @@ public class MancalaGUI extends JFrame implements ActionListener {
 		getU2H6().setEnabled(false);
 	}
 
-	private static void enableU2Buttons() {
+	public static void enableU2Buttons() {
 		getU2H1().setEnabled(true);
 		getU2H2().setEnabled(true);
 		getU2H3().setEnabled(true);
@@ -459,6 +459,10 @@ public class MancalaGUI extends JFrame implements ActionListener {
 			if (Mancala.getTurn().getActivePlayer().getName().equals("2")) {
 				Mancala.getTurn().changeTurn();
 			}
+			MancalaGUI.getMessage().setText(
+					"It's now player "
+							+ Mancala.getTurn().getActivePlayer().getName()
+							+ " turn!");
 			disableButtons();
 			changeStoneLabels();
 		} else {

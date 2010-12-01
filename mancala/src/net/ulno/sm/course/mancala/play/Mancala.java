@@ -88,9 +88,9 @@ public class Mancala {
 			writeLog(player1, player2);
 		}
 
-		if (!anotherTurn) {
+		if (!anotherTurn && !gameOver) {
 			Mancala.getTurn().changeTurn();
-			MancalaGUI.disableButtons();
+			MancalaGUI.disableButtons();			
 			MancalaGUI.getMessage().setText(
 					"It's now player "
 							+ Mancala.getTurn().getActivePlayer().getName()
@@ -193,20 +193,19 @@ public static boolean isGameOver(){
 	List<Cell> c1 = turn.getActivePlayer().getCells();
 	List<Cell> c2 = turn.getNonActivePlayer().getCells();
 	int total1 = 0;
-	int total2 = 0;
+	int total = 0;
 	for (Cell c : c1){
 		if (!c.isMancala()){
-			total1 += c.getStoneNumber();
+			total += c.getStoneNumber();
 		}
 	}
 	
 	for (Cell c : c2){
 		if (!c.isMancala()){
-			total2 += c.getStoneNumber();
+			total1 += c.getStoneNumber();
 		}
-	}
-	
-	return total1 == 0 || total2==0;
+	}	
+	return total == 0 || total1 == 0;
 }
 	
 
